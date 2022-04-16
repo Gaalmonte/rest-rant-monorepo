@@ -1,9 +1,20 @@
+// Modules and Globals
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const defineCurrentUser = require("./middleware/defineCurrentUser");
+const cookieSession = require("cookie-session");
+
+// Express Settings
+app.use(
+  cookieSession({
+    name: "session",
+    // sameSite: "strict",
+    keys: [process.env.SESSION_SECRET],
+    maxAge: 24 * 60 * 60 * 1000,
+  })
+);
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -13,7 +24,6 @@ app.use(
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(defineCurrentUser);
 
 // Controllers & Routes
 
